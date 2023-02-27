@@ -1,10 +1,13 @@
+import {Text} from 'native-base';
 import React from 'react';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 
 const HomeScreen = () => {
   return (
     <View>
-      <Text>home-screen</Text>
+      <Text fontSize="3xl" bold color="emerald.400">
+        Hello
+      </Text>
     </View>
   );
 };
