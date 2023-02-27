@@ -1,14 +1,14 @@
 import {Text} from 'native-base';
 import React from 'react';
-import {View} from 'react-native';
+import {SafeAreaView} from 'react-native';
 
 const HomeScreen = () => {
   return (
-    <View>
+    <SafeAreaView>
       <Text fontSize="3xl" bold color="emerald.400">
         Hello
       </Text>
-    </View>
+    </SafeAreaView>
   );
 };
 
