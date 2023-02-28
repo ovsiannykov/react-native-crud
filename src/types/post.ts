@@ -10,6 +10,13 @@ export type Post = {
   deleted_at: string | null;
 };
 
+export type PostSendData = {
+  title: string;
+  text: string;
+  image: string;
+  url: string;
+};
+
 export const POST_MOCKS_EXAPMLE = {
   id: 198,
   title: 'HU2uXdOWL2',

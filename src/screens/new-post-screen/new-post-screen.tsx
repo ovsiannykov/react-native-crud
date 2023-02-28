@@ -2,14 +2,20 @@ import {useNavigation} from '@react-navigation/native';
 import {Button, FormControl, Input} from 'native-base';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, View} from 'react-native';
+import {usePostsContext} from '../../entities/post/posts-provider';
 import styles from './new-post-screen.styles';
 
 function NewPostScreen() {
   const navigation = useNavigation();
+  const {isLoading, sendPost} = usePostsContext();
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
   const [image, setImage] = useState('');
   const [url, setUrl] = useState('');
+
+  const goBack = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -22,8 +28,9 @@ function NewPostScreen() {
       Alert.alert('Oops...', 'Please fill in all fields');
       return;
     }
-    console.log('succes');
-  }, [image, text, title, url]);
+
+    sendPost({title, text, image, url}, goBack);
+  }, [goBack, image, sendPost, text, title, url]);
 
   // Sorry for the lack of validation
 

@@ -12,8 +12,11 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    height: '10%',
+    paddingHorizontal: 16,
   },
   postList: {
-    height: '100%',
+    height: '90%',
+    paddingHorizontal: 16,
   },
 });

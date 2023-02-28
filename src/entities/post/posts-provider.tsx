@@ -1,6 +1,9 @@
 import axios from 'axios';
 import React, {useContext} from 'react';
-import {Post} from '../../types/post';
+import {Alert} from 'react-native';
+import {Post, PostSendData} from '../../types/post';
+
+const BASE_URL = 'https://yourtestapi.com/api/posts/';
 
 export const postsContext = React.createContext<PostContext>(undefined!);
 
@@ -8,6 +11,7 @@ type PostContext = {
   posts: Post[] | null;
   getPosts: InstanceType<typeof PostsProvider>['getPosts'];
   isLoading: boolean;
+  sendPost: InstanceType<typeof PostsProvider>['sendPost'];
 };
 
 type Props = {
@@ -26,6 +30,7 @@ export class PostsProvider extends React.Component<Props, State> {
         posts: null,
         getPosts: this.getPosts,
         isLoading: false,
+        sendPost: this.sendPost,
       },
     };
   }
@@ -34,7 +39,7 @@ export class PostsProvider extends React.Component<Props, State> {
     this.setState(prev => ({context: {...prev.context, isLoading: true}}));
 
     try {
-      const res = await axios.get('https://yourtestapi.com/api/posts/');
+      const res = await axios.get(BASE_URL);
 
       if (res.status === 200) {
         await this.setState(prev => ({
@@ -43,6 +48,27 @@ export class PostsProvider extends React.Component<Props, State> {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      this.setState(prev => ({context: {...prev.context, isLoading: false}}));
+    }
+  };
+
+  sendPost = async (body: PostSendData, goBack: () => void) => {
+    this.setState(prev => ({context: {...prev.context, isLoading: true}}));
+
+    try {
+      const res = await axios.post(BASE_URL, body);
+
+      if (res.status === 200 || res.status === 201) {
+        Alert.alert('Post uploaded 🎉');
+        this.state.context.getPosts();
+        goBack();
+      } else {
+        Alert.alert('Ooops...', 'Something went wrong');
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Ooops...', 'Something went wrong');
     } finally {
       this.setState(prev => ({context: {...prev.context, isLoading: false}}));
     }

@@ -7,8 +7,8 @@ import {
   Stack,
   Text,
 } from 'native-base';
-import React, {memo} from 'react';
-import {TouchableOpacity} from 'react-native';
+import React, {memo, useCallback} from 'react';
+import {Alert, Linking, TouchableOpacity} from 'react-native';
 import useDateFormatters from '../../hooks/use-date-formatter';
 import {Post} from '../../types/post';
 import styles from './post-list-item.styles';
@@ -21,6 +21,15 @@ type PostListItemProps = {
 
 const PostListItem = memo(({post, onPress, onLongPress}: PostListItemProps) => {
   const {dayShortMonthTime} = useDateFormatters();
+
+  const openUrl = useCallback(async () => {
+    const supported = await Linking.canOpenURL(post.url);
+    if (supported) {
+      await Linking.openURL(post.url);
+    } else {
+      Alert.alert(`Don't know how to open this URL`);
+    }
+  }, [post.url]);
 
   return (
     <TouchableOpacity
@@ -69,21 +78,23 @@ const PostListItem = memo(({post, onPress, onLongPress}: PostListItemProps) => {
           </Text>
           <HStack alignItems="center" space={4} justifyContent="space-between">
             <HStack alignItems="center">
-              <Text
-                fontSize="sm"
-                _light={{
-                  color: 'primary.600',
-                }}
-                _dark={{
-                  color: 'violet.400',
-                }}
-                fontWeight="500"
-                ml="-0.5"
-                mt="-1"
-                numberOfLines={1}
-                maxW={400}>
-                {post.url}
-              </Text>
+              <TouchableOpacity onPress={openUrl}>
+                <Text
+                  fontSize="sm"
+                  _light={{
+                    color: 'primary.600',
+                  }}
+                  _dark={{
+                    color: 'violet.400',
+                  }}
+                  fontWeight="500"
+                  ml="-0.5"
+                  mt="-1"
+                  numberOfLines={1}
+                  maxW={400}>
+                  {post.url}
+                </Text>
+              </TouchableOpacity>
             </HStack>
           </HStack>
           <HStack alignItems="center" space={4} justifyContent="space-between">
