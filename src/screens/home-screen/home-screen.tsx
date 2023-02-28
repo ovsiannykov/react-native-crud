@@ -12,12 +12,15 @@ import PlusIcon from '../../assets/icons/plus.svg';
 import OptionsModal from '../../components/options-modal/options-modal';
 import PostListItem from '../../components/post-list-item/post-list-item';
 import {usePostsContext} from '../../entities/post/posts-provider';
+import {HomeScreenNavigationType} from '../../navigation/main-navigator/main-navigator';
 import {Post} from '../../types/post';
 import styles from './home-screen.styles';
 
+type HomeScreenNavigationProp = HomeScreenNavigationType['navigation'];
+
 const HomeScreen = () => {
   const {isLoading, posts, getPosts, deletePost} = usePostsContext();
-  const navigation = useNavigation();
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   const [isOpenOptionsModal, setIsOpenOptionsModal] = useState<boolean>(false);
   const [selectPostId, setSelectPostId] = useState<number | null>(null);
   const keyExtractor = useCallback((item: Post) => item.id.toString(), []);
@@ -29,6 +32,13 @@ const HomeScreen = () => {
   const linkToNewPostScreen = useCallback(() => {
     navigation.navigate('NEW_POST_SCREEN');
   }, [navigation]);
+
+  const linkToEditPostScreen = useCallback(() => {
+    if (selectPostId !== null) {
+      navigation.navigate('NEW_POST_SCREEN', {postId: selectPostId});
+    }
+    return;
+  }, [navigation, selectPostId]);
 
   const openOptionModal = useCallback((id: number) => {
     setSelectPostId(id);
@@ -84,6 +94,7 @@ const HomeScreen = () => {
         isModal={isOpenOptionsModal}
         setModal={setIsOpenOptionsModal}
         onDelete={deletePostHandler}
+        onEdit={linkToEditPostScreen}
       />
     </SafeAreaView>
   );

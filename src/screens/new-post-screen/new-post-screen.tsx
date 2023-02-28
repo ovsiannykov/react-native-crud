@@ -1,18 +1,27 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {Button, FormControl, Input} from 'native-base';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, View} from 'react-native';
 import {usePostsContext} from '../../entities/post/posts-provider';
+import {NewPostScreenNavigationType} from '../../navigation/main-navigator/main-navigator';
 import LoadingScreen from '../loading-screen/loading-screen';
 import styles from './new-post-screen.styles';
 
+type HomeScreenNavigationProp = NewPostScreenNavigationType['navigation'];
+type HomeScreenRouteProp = NewPostScreenNavigationType['route'];
+
 function NewPostScreen() {
-  const navigation = useNavigation();
-  const {isLoading, sendPost} = usePostsContext();
-  const [title, setTitle] = useState('');
-  const [text, setText] = useState('');
-  const [image, setImage] = useState('');
-  const [url, setUrl] = useState('');
+  const {isLoading, sendPost, posts} = usePostsContext();
+  const navigation = useNavigation<HomeScreenNavigationProp>();
+  const route = useRoute<HomeScreenRouteProp>();
+  const id = route.params?.postId;
+  const post = posts?.filter(el => el.id === id);
+
+  // fields:
+  const [title, setTitle] = useState(post?.length ? post[0].title : '');
+  const [text, setText] = useState(post?.length ? post[0].text : '');
+  const [image, setImage] = useState(post?.length ? post[0].image : '');
+  const [url, setUrl] = useState(post?.length ? post[0].url : '');
 
   const goBack = useCallback(() => {
     navigation.goBack();
@@ -20,9 +29,9 @@ function NewPostScreen() {
 
   useEffect(() => {
     navigation.setOptions({
-      title: 'New Post',
+      title: id ? 'Edit Post' : 'New Post',
     });
-  }, [navigation]);
+  }, [id, navigation]);
 
   const saveHandler = useCallback(() => {
     if (!title || !text || !image || !url) {
@@ -30,8 +39,8 @@ function NewPostScreen() {
       return;
     }
 
-    sendPost({title, text, image, url}, goBack);
-  }, [goBack, image, sendPost, text, title, url]);
+    id ? null : sendPost({title, text, image, url}, goBack);
+  }, [goBack, id, image, sendPost, text, title, url]);
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -106,7 +115,7 @@ function NewPostScreen() {
           colorScheme="blueGray"
           _text={styles.buttonText}
           onPress={saveHandler}>
-          Create
+          {id ? 'Save' : 'Create'}
         </Button>
       </View>
     </View>
