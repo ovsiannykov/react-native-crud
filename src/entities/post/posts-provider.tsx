@@ -13,6 +13,7 @@ type PostContext = {
   isLoading: boolean;
   sendPost: InstanceType<typeof PostsProvider>['sendPost'];
   deletePost: InstanceType<typeof PostsProvider>['deletePost'];
+  updatePost: InstanceType<typeof PostsProvider>['updatePost'];
 };
 
 type Props = {
@@ -33,6 +34,7 @@ export class PostsProvider extends React.Component<Props, State> {
         isLoading: false,
         sendPost: this.sendPost,
         deletePost: this.deletePost,
+        updatePost: this.updatePost,
       },
     };
   }
@@ -97,6 +99,27 @@ export class PostsProvider extends React.Component<Props, State> {
       }
     }
     return;
+  };
+
+  updatePost = async (id: number, body: PostSendData, goBack: () => void) => {
+    this.setState(prev => ({context: {...prev.context, isLoading: true}}));
+
+    try {
+      const res = await axios.put(`${BASE_URL}${id}/`, body);
+
+      if (res.status === 200 || res.status === 201) {
+        this.state.context.getPosts();
+        Alert.alert('Post updated 🎉');
+        goBack();
+      } else {
+        Alert.alert('Ooops...', 'Something went wrong');
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Ooops...', 'Something went wrong');
+    } finally {
+      this.setState(prev => ({context: {...prev.context, isLoading: false}}));
+    }
   };
 
   render(): JSX.Element {

@@ -11,7 +11,7 @@ type HomeScreenNavigationProp = NewPostScreenNavigationType['navigation'];
 type HomeScreenRouteProp = NewPostScreenNavigationType['route'];
 
 function NewPostScreen() {
-  const {isLoading, sendPost, posts} = usePostsContext();
+  const {isLoading, sendPost, posts, updatePost} = usePostsContext();
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const route = useRoute<HomeScreenRouteProp>();
   const id = route.params?.postId;
@@ -39,8 +39,10 @@ function NewPostScreen() {
       return;
     }
 
-    id ? null : sendPost({title, text, image, url}, goBack);
-  }, [goBack, id, image, sendPost, text, title, url]);
+    const body = {title, text, image, url};
+
+    id ? updatePost(id, body, goBack) : sendPost(body, goBack);
+  }, [goBack, id, image, sendPost, text, title, updatePost, url]);
 
   if (isLoading) {
     return <LoadingScreen />;
