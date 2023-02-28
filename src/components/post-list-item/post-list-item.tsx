@@ -9,6 +9,7 @@ import {
 } from 'native-base';
 import React, {memo} from 'react';
 import {TouchableOpacity} from 'react-native';
+import useDateFormatters from '../../hooks/use-date-formatter';
 import {Post} from '../../types/post';
 
 type PostListItemProps = {
@@ -18,6 +19,8 @@ type PostListItemProps = {
 };
 
 const PostListItem = memo(({post, onPress, onLongPress}: PostListItemProps) => {
+  const {dayShortMonthTime} = useDateFormatters();
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -45,6 +48,9 @@ const PostListItem = memo(({post, onPress, onLongPress}: PostListItemProps) => {
             <Image
               source={{
                 uri: post.image,
+              }}
+              fallbackSource={{
+                uri: 'https://lh3.googleusercontent.com/EbXw8rOdYxOGdXEFjgNP8lh-YAuUxwhOAe2jhrz3sgqvPeMac6a6tHvT35V6YMbyNvkZL4R_a2hcYBrtfUhLvhf-N2X3OB9cvH4uMw=w1064-v0',
               }}
               alt="image"
             />
@@ -93,7 +99,7 @@ const PostListItem = memo(({post, onPress, onLongPress}: PostListItemProps) => {
                 mt="-1"
                 numberOfLines={1}
                 maxW={400}>
-                {post.updated_at}
+                {dayShortMonthTime(post.updated_at)}
               </Text>
             </HStack>
           </HStack>
