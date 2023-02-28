@@ -2,6 +2,8 @@ import {Button} from 'native-base';
 import React, {Dispatch, memo, SetStateAction, useCallback} from 'react';
 import {View} from 'react-native';
 import Modal from 'react-native-modal';
+import {usePostsContext} from '../../entities/post/posts-provider';
+import LoadingScreen from '../../screens/loading-screen/loading-screen';
 import styles from './options-modal.styles';
 
 type OptionsModalProps = {
@@ -13,9 +15,11 @@ type OptionsModalProps = {
 
 const OptionsModal = memo(
   ({isModal, setModal, onEdit, onDelete}: OptionsModalProps) => {
+    const {isLoading} = usePostsContext();
+
     const closeModal = useCallback(() => {
-      setModal(false);
-    }, [setModal]);
+      if (!isLoading) setModal(false);
+    }, [isLoading, setModal]);
 
     const editHandler = useCallback(() => {
       closeModal();
@@ -48,18 +52,22 @@ const OptionsModal = memo(
             <View style={styles.line} />
           </View>
           <View style={styles.content}>
-            <View>
-              <Button _text={styles.buttonText} mb={2} onPress={editHandler}>
-                Edit
-              </Button>
-              <Button
-                colorScheme="secondary"
-                _text={styles.buttonText}
-                mb={2}
-                onPress={deleteHandler}>
-                Delete
-              </Button>
-            </View>
+            {isLoading ? (
+              <LoadingScreen />
+            ) : (
+              <View>
+                <Button _text={styles.buttonText} mb={2} onPress={editHandler}>
+                  Edit
+                </Button>
+                <Button
+                  colorScheme="secondary"
+                  _text={styles.buttonText}
+                  mb={2}
+                  onPress={deleteHandler}>
+                  Delete
+                </Button>
+              </View>
+            )}
           </View>
         </View>
       </Modal>

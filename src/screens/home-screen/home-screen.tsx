@@ -16,9 +16,10 @@ import {Post} from '../../types/post';
 import styles from './home-screen.styles';
 
 const HomeScreen = () => {
-  const {isLoading, posts, getPosts} = usePostsContext();
+  const {isLoading, posts, getPosts, deletePost} = usePostsContext();
   const navigation = useNavigation();
   const [isOpenOptionsModal, setIsOpenOptionsModal] = useState<boolean>(false);
+  const [selectPostId, setSelectPostId] = useState<number | null>(null);
   const keyExtractor = useCallback((item: Post) => item.id.toString(), []);
 
   useEffect(() => {
@@ -29,13 +30,20 @@ const HomeScreen = () => {
     navigation.navigate('NEW_POST_SCREEN');
   }, [navigation]);
 
-  const optionsModalHandler = useCallback(() => {
+  const openOptionModal = useCallback((id: number) => {
+    setSelectPostId(id);
     setIsOpenOptionsModal(true);
   }, []);
 
+  const deletePostHandler = useCallback(() => {
+    deletePost(selectPostId);
+  }, [deletePost, selectPostId]);
+
   const renderPostItem: ListRenderItem<Post> = useCallback(
-    ({item}) => <PostListItem post={item} onPress={optionsModalHandler} />,
-    [optionsModalHandler],
+    ({item}) => (
+      <PostListItem post={item} onPress={() => openOptionModal(item.id)} />
+    ),
+    [openOptionModal],
   );
 
   return (
@@ -75,6 +83,7 @@ const HomeScreen = () => {
       <OptionsModal
         isModal={isOpenOptionsModal}
         setModal={setIsOpenOptionsModal}
+        onDelete={deletePostHandler}
       />
     </SafeAreaView>
   );

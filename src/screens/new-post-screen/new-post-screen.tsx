@@ -3,6 +3,7 @@ import {Button, FormControl, Input} from 'native-base';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, View} from 'react-native';
 import {usePostsContext} from '../../entities/post/posts-provider';
+import LoadingScreen from '../loading-screen/loading-screen';
 import styles from './new-post-screen.styles';
 
 function NewPostScreen() {
@@ -31,6 +32,10 @@ function NewPostScreen() {
 
     sendPost({title, text, image, url}, goBack);
   }, [goBack, image, sendPost, text, title, url]);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   // Sorry for the lack of validation
 

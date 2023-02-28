@@ -12,6 +12,7 @@ type PostContext = {
   getPosts: InstanceType<typeof PostsProvider>['getPosts'];
   isLoading: boolean;
   sendPost: InstanceType<typeof PostsProvider>['sendPost'];
+  deletePost: InstanceType<typeof PostsProvider>['deletePost'];
 };
 
 type Props = {
@@ -31,6 +32,7 @@ export class PostsProvider extends React.Component<Props, State> {
         getPosts: this.getPosts,
         isLoading: false,
         sendPost: this.sendPost,
+        deletePost: this.deletePost,
       },
     };
   }
@@ -60,8 +62,8 @@ export class PostsProvider extends React.Component<Props, State> {
       const res = await axios.post(BASE_URL, body);
 
       if (res.status === 200 || res.status === 201) {
-        Alert.alert('Post uploaded 🎉');
         this.state.context.getPosts();
+        Alert.alert('Post uploaded 🎉');
         goBack();
       } else {
         Alert.alert('Ooops...', 'Something went wrong');
@@ -72,6 +74,29 @@ export class PostsProvider extends React.Component<Props, State> {
     } finally {
       this.setState(prev => ({context: {...prev.context, isLoading: false}}));
     }
+  };
+
+  deletePost = async (id: number | null) => {
+    this.setState(prev => ({context: {...prev.context, isLoading: true}}));
+
+    if (id !== null) {
+      try {
+        const res = await axios.delete(`${BASE_URL}${id}/`);
+
+        if (res.status === 200 || res.status === 201) {
+          this.state.context.getPosts();
+          Alert.alert('Post deleted 🎉');
+        } else {
+          Alert.alert('Ooops...', 'Something went wrong');
+        }
+      } catch (error) {
+        console.log(error);
+        Alert.alert('Ooops...', 'Something went wrong');
+      } finally {
+        this.setState(prev => ({context: {...prev.context, isLoading: false}}));
+      }
+    }
+    return;
   };
 
   render(): JSX.Element {
