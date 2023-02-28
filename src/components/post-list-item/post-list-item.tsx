@@ -11,6 +11,7 @@ import React, {memo} from 'react';
 import {TouchableOpacity} from 'react-native';
 import useDateFormatters from '../../hooks/use-date-formatter';
 import {Post} from '../../types/post';
+import styles from './post-list-item.styles';
 
 type PostListItemProps = {
   post: Post;
@@ -25,7 +26,8 @@ const PostListItem = memo(({post, onPress, onLongPress}: PostListItemProps) => {
     <TouchableOpacity
       onPress={onPress}
       onLongPress={onLongPress}
-      disabled={!onPress}>
+      disabled={!onPress}
+      style={styles.post}>
       <Box
         maxW="100%"
         rounded="lg"

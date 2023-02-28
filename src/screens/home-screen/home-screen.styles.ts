@@ -7,4 +7,7 @@ export default StyleSheet.create({
   container: {
     paddingHorizontal: 16,
   },
+  postList: {
+    height: '100%',
+  },
 });
