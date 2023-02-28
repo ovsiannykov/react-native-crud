@@ -18,20 +18,8 @@ function NewPostScreen() {
   }, [navigation]);
 
   const saveHandler = useCallback(() => {
-    if (
-      title.length > 3 ||
-      !title ||
-      text.length > 3 ||
-      !text ||
-      image.length > 3 ||
-      !image ||
-      url.length > 3 ||
-      url
-    ) {
-      Alert.alert(
-        'Oops...',
-        'Please fill in all fields, and check their length',
-      );
+    if (!title || !text || !image || !url) {
+      Alert.alert('Oops...', 'Please fill in all fields');
       return;
     }
     console.log('succes');
