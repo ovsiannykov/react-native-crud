@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {Button, Text} from 'native-base';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   ListRenderItem,
@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import PlusIcon from '../../assets/icons/plus.svg';
+import OptionsModal from '../../components/options-modal/options-modal';
 import PostListItem from '../../components/post-list-item/post-list-item';
 import {usePostsContext} from '../../entities/post/posts-provider';
 import {Post} from '../../types/post';
@@ -17,6 +18,7 @@ import styles from './home-screen.styles';
 const HomeScreen = () => {
   const {isLoading, posts, getPosts} = usePostsContext();
   const navigation = useNavigation();
+  const [isOpenOptionsModal, setIsOpenOptionsModal] = useState<boolean>(false);
   const keyExtractor = useCallback((item: Post) => item.id.toString(), []);
 
   useEffect(() => {
@@ -27,9 +29,13 @@ const HomeScreen = () => {
     navigation.navigate('NEW_POST_SCREEN');
   }, [navigation]);
 
+  const optionsModalHandler = useCallback(() => {
+    setIsOpenOptionsModal(true);
+  }, []);
+
   const renderPostItem: ListRenderItem<Post> = useCallback(
-    ({item}) => <PostListItem post={item} />,
-    [],
+    ({item}) => <PostListItem post={item} onPress={optionsModalHandler} />,
+    [optionsModalHandler],
   );
 
   return (
@@ -65,6 +71,10 @@ const HomeScreen = () => {
             No posts
           </Text>
         )}
+      />
+      <OptionsModal
+        isModal={isOpenOptionsModal}
+        setModal={setIsOpenOptionsModal}
       />
     </SafeAreaView>
   );

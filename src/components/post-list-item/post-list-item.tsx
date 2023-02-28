@@ -16,10 +16,9 @@ import styles from './post-list-item.styles';
 type PostListItemProps = {
   post: Post;
   onPress?: () => void;
-  onLongPress?: () => void;
 };
 
-const PostListItem = memo(({post, onPress, onLongPress}: PostListItemProps) => {
+const PostListItem = memo(({post, onPress}: PostListItemProps) => {
   const {dayShortMonthTime} = useDateFormatters();
 
   const openUrl = useCallback(async () => {
@@ -32,11 +31,7 @@ const PostListItem = memo(({post, onPress, onLongPress}: PostListItemProps) => {
   }, [post.url]);
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      onLongPress={onLongPress}
-      disabled={!onPress}
-      style={styles.post}>
+    <TouchableOpacity onPress={onPress} disabled={!onPress} style={styles.post}>
       <Box
         maxW="100%"
         rounded="lg"
