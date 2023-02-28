@@ -6,15 +6,16 @@ export const HEADER_STYLE_CONFIG: StackNavigationOptions = {
     backgroundColor: 'white',
   },
   headerBackTitleStyle: {
-    color: 'black',
+    color: '#155e75',
     fontSize: 12,
   },
-  headerTintColor: 'black',
+  headerTintColor: '#155e75',
   headerShadowVisible: false,
+  headerBackTitleVisible: false,
   headerTitleStyle: {
-    color: 'black',
-    fontWeight: '500',
-    fontSize: 16,
+    color: '#155e75',
+    fontWeight: '600',
+    fontSize: 20,
   },
 };
 

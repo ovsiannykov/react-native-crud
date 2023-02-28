@@ -8,12 +8,12 @@ export default StyleSheet.create({
   container: {
     paddingHorizontal: 16,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  formItem: {
+    paddingHorizontal: 4,
+    marginBottom: 22,
   },
-  postList: {
-    height: '100%',
+  buttonText: {
+    fontSize: 18,
+    fontWeight: '700',
   },
 });
